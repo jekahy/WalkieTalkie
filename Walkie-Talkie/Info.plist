@@ -41,5 +41,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>In order to stream your voice we need to access your microphone.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>efe</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>rer</string>
 </dict>
 </plist>
