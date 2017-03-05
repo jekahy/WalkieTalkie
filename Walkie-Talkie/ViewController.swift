@@ -14,7 +14,9 @@ import AVFoundation
 
 class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
     
-    @IBOutlet weak var hostAddrTF: UITextField!
+    @IBOutlet weak var connectionIndicator: UIView!
+    @IBOutlet weak var talkBtn: UIButton!
+    @IBOutlet weak var connectBtn: LoadingButton!
 
     private let audioEngine: AVAudioEngine = AVAudioEngine()
     private let audioPlayer: AVAudioPlayerNode = AVAudioPlayerNode()
@@ -26,55 +28,63 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
     private var playerStarted = false
     private var socketInit = false
     private let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
-    
-    
+
     
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         setupAudioSession()
-//        initConnection()
-//        let manager = AudioManager()
-//        manager.prepareAudioInput()
+        initAudioEngine()
         
-//        let am = AudioMetering(callback: self.work)
-//        am.start()
-        
-    }
-    
-    
-    func work(data:Data)  {
-        socket.send(data, withTimeout: 0, tag: 0)
-    }
-    
-    
-    func initConnection()  {
-        socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
-        do {
-            try socket.bind(toPort: 4445)
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(UDP_DID_CONNECT), object: nil, queue: OperationQueue.main) { not in
+            self.toggleConnectionIndicator(enable: true)
+            self.connectBtn.hideLoading()
+            self.connectBtn.isEnabled=false
+            self.talkBtn.isEnabled = true
             
-//            try socket.connect(toHost: "localhost" ,onPort : 4444)
-            try socket.beginReceiving()
-        }catch{
-            print ("init conn error = \(error)")
         }
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(UDP_DID_DISCONNECT), object: nil, queue: OperationQueue.main) { not in
+            self.toggleConnectionIndicator(enable: false)
+            self.connectBtn.hideLoading()
+            self.connectBtn.isEnabled=true
+            self.talkBtn.isEnabled = false
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(UDP_FAILED_TO_CONNECT), object: nil, queue: OperationQueue.main) { not in
+            self.toggleConnectionIndicator(enable: false)
+            self.connectBtn.hideLoading()
+            self.connectBtn.isEnabled=true
+            self.talkBtn.isEnabled = false
+        }
+    }
 
+    
+    // MARK: IBActions
+    
+    @IBAction func connectTapped(_ sender: LoadingButton) {
+        connectBtn.showLoading()
+        ConnectionManager.manager.connect(receiveBlock: playReceivedData)
     }
     
-    @IBAction func btnAction(sender: UIButton) {
-        
-        if (!socketInit){
-            initConnection()
+    @IBAction func startTalking(_ sender: Any) {
+        do{
+            try audioEngine.start()
+        }catch{
+            print("startTalking err=\(error)")
         }
-        
-        if (!socket.isConnected()){
-            connect()
-        }
-      
-        
- 
+    }
+    
+    @IBAction func stopTalking(_ sender: Any) {
+        audioEngine.pause()
+    }
+    
+    // MARK:
+    
+    private func initAudioEngine(){
         
         if (!playerStarted){
             setupInput()
@@ -82,32 +92,16 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
         }
         
         if(!audioEngine.isRunning){
-            do {
-                audioEngine.prepare()
-                try audioEngine.start()
-                //                print("outputVolume=\(downMixer.outputVolume), volume=\(downMixer.volume)")
-            }catch{
-                print("startOutput err=\(error)")
-            }
+            audioEngine.prepare()
         }
-    
     }
     
-    private func connect(){
-        do{
-            try socket.connect(toHost: "192.168.1.14" ,onPort : 4444)
-        }catch{
-            
-        }
-        
-    }
     
     private func setupOutput(){
     
         assert(audioEngine.inputNode != nil)
         
         let input = audioEngine.inputNode
-//
         
         print ("\(input?.outputFormat(forBus: 1))")
         
@@ -145,8 +139,9 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
 //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
         buffer.frameLength = 250
         print ("time = \(timeE)")
-        print (self.toNSData(PCMBuffer: buffer).length)
-        self.socket.send(self.toNSData(PCMBuffer: buffer) as Data, withTimeout: 0, tag: 0)
+//        print (self.toNSData(PCMBuffer: buffer).length)
+        
+        ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
     }
     
     private func playReceivedData(data:Data){
@@ -159,13 +154,12 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
         }else{
             audioPlayer.stop()
         }
-        
     }
 
     
    
     
-    func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData {
+    private func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData {
         
         let channelCount = 1
         let channels = UnsafeBufferPointer(start: PCMBuffer.floatChannelData, count: channelCount)
@@ -177,7 +171,7 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
         return ch0Data
     }
     
-    func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer {
+    private func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer {
        
         let PCMBuffer = AVAudioPCMBuffer(pcmFormat: incommingFormat, frameCapacity: UInt32(data.length) / incommingFormat.streamDescription.pointee.mBytesPerFrame)
         PCMBuffer.frameLength = PCMBuffer.frameCapacity
@@ -240,41 +234,15 @@ class ViewController: UIViewController , GCDAsyncUdpSocketDelegate {
 //    }
 //    
     
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotSendDataWithTag tag: Int, dueToError error: Error?) {
-        if let er = error {
-            print ("error = \(er.localizedDescription)")
-        }
-      print("failed")
-    
-    }
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didSendDataWithTag tag: Int) {
-        print("succeed")
-    }
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data) {
-        print("did connect!")
-    }
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotConnect error: Error?) {
-        print("did not connect!")
-    }
-
-    
-    internal func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?) {
-        if let er = error {
-            print ("error = \(er.localizedDescription)")
-        }
-        print("did close!")
-    }
-    
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
+    private func toggleConnectionIndicator(enable:Bool){
         
-        playReceivedData(data: data)
+        connectionIndicator.backgroundColor = enable ? .green : .gray
+        
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     
 }

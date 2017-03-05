@@ -601,7 +601,7 @@ final class AudioMetering: NSObject {
             try auAudioUnit.allocateRenderResources()
             try auAudioUnit.startHardware()
         
-        } catch let error as NSError {
+        } catch {
 //            dumpError(error, functionName: "AUAudioUnit failed")
             assert(false)
         }
