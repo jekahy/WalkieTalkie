@@ -1,17 +1,14 @@
 PODS:
-  - AudioKit (3.5.3)
   - CocoaAsyncSocket (7.5.1):
     - CocoaAsyncSocket/GCD (= 7.5.1)
   - CocoaAsyncSocket/GCD (7.5.1)
 
 DEPENDENCIES:
-  - AudioKit (~> 3.5)
   - CocoaAsyncSocket
 
 SPEC CHECKSUMS:
-  AudioKit: bf2ebc611bb9b8107dcbe14f8356c761ee8fcc12
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
 
-PODFILE CHECKSUM: 3a10ce73f1f3330499fb6f12662cf6f33712e9ac
+PODFILE CHECKSUM: 7f40ae47367071b22e02d5cb472b85a3602a9258
 
 COCOAPODS: 1.1.1

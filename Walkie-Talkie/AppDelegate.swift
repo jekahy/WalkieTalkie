@@ -45,6 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     
+    
+}
+
+extension AppDelegate {
+    
     func visibleVC(_ rootViewController: UIViewController?) -> UIViewController? {
         
         var rootVC = rootViewController
@@ -73,4 +78,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
-

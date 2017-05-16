@@ -91,19 +91,59 @@
 			isa = PBXGroup;
 			children = (
 				E15CDC8F1E589821005A2361 /* AppDelegate.swift */,
-				E15CDC911E589821005A2361 /* WalkieTalkieVC.swift */,
-				E1E56DF41E5A130C004A4FB8 /* AudioManager2.swift */,
-				E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */,
-				E15542911E63528900FBA945 /* ConnectionManager.swift */,
-				E156BD5D1E648FC200733B32 /* SettingsVC.swift */,
-				E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */,
-				E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */,
-				E15CDC931E589821005A2361 /* Main.storyboard */,
+				E15FB7DB1ECB646D00C43277 /* Controllers */,
+				E15FB7DD1ECB649200C43277 /* Managers */,
+				E15FB7DC1ECB648000C43277 /* Views */,
+				E15FB7DF1ECB64BB00C43277 /* Interface */,
+				E15FB7DE1ECB64A200C43277 /* Controls */,
 				E15CDC961E589821005A2361 /* Assets.xcassets */,
-				E15CDC981E589821005A2361 /* LaunchScreen.storyboard */,
 				E15CDC9B1E589821005A2361 /* Info.plist */,
 			);
 			path = "Walkie-Talkie";
+			sourceTree = "<group>";
+		};
+		E15FB7DB1ECB646D00C43277 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E156BD5D1E648FC200733B32 /* SettingsVC.swift */,
+				E15CDC911E589821005A2361 /* WalkieTalkieVC.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		E15FB7DC1ECB648000C43277 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		E15FB7DD1ECB649200C43277 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E1E56DF41E5A130C004A4FB8 /* AudioManager2.swift */,
+				E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */,
+				E15542911E63528900FBA945 /* ConnectionManager.swift */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		E15FB7DE1ECB64A200C43277 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */,
+			);
+			name = Controls;
+			sourceTree = "<group>";
+		};
+		E15FB7DF1ECB64BB00C43277 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				E15CDC931E589821005A2361 /* Main.storyboard */,
+				E15CDC981E589821005A2361 /* LaunchScreen.storyboard */,
+			);
+			name = Interface;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

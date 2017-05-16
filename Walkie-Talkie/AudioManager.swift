@@ -83,7 +83,7 @@ final class AudioManager {
         
         let input = audioEngine.inputNode
         
-        print ("\(input?.outputFormat(forBus: 1))")
+        print ("\(String(describing: input?.outputFormat(forBus: 1)))")
         
         
         downMixer.volume = 0.0
@@ -165,9 +165,7 @@ final class AudioManager {
         
         //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
         buffer.frameLength = 250
-        print ("time = \(timeE)")
-        //        print (self.toNSData(PCMBuffer: buffer).length)
-        
+        print ("time = \(timeE)")        
         ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
     }
     
@@ -198,40 +196,5 @@ final class AudioManager {
         }
     }
 
-    
-//    func convertPCMBufferToAAC(inBuffer : AVAudioPCMBuffer) -> Void {
-//        let inputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32,
-//                                        sampleRate: 8000, channels: 1,
-//                                        interleaved: false)
-//
-//        var outDesc = AudioStreamBasicDescription(mSampleRate: 8000,
-//                                                  mFormatID: kAudioFormatMPEG4AAC,
-//                                                  mFormatFlags: 0,
-//                                                  mBytesPerPacket: 0,
-//                                                  mFramesPerPacket: 0,
-//                                                  mBytesPerFrame: 0,
-//                                                  mChannelsPerFrame: 1,
-//                                                  mBitsPerChannel: 0,
-//                                                  mReserved: 0)
-//
-//        let outputFormat = AVAudioFormat(streamDescription: &outDesc)
-//        let converter = AVAudioConverter(from: inputFormat, to: outputFormat)
-//
-//
-//        let outBuffer = AVAudioCompressedBuffer(format: outputFormat,
-//                                                packetCapacity: 8,
-//                                                maximumPacketSize: converter.maximumOutputPacketSize)
-//
-//        let inputBlock : AVAudioConverterInputBlock = {
-//            inNumPackets, outStatus in
-//            outStatus.pointee = AVAudioConverterInputStatus.haveData
-//            return inBuffer
-//        }
-//        var error : NSError?
-//        let status = converter.convert(to: outBuffer, error: &error, withInputFrom: inputBlock)
-//        print (status)
-//    }
-
-    
     
 }
