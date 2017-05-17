@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="gxH-qS-gqZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="gxH-qS-gqZ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -65,9 +65,8 @@
                                     <action selector="stopTalking:" destination="BYZ-38-t0r" eventType="touchCancel" id="uqy-p5-tei"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hew-ZE-CoJ">
-                                <rect key="frame" x="12" y="81" width="129" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="hew-ZE-CoJ">
+                                <rect key="frame" x="15" y="79" width="129" height="29"/>
                                 <segments>
                                     <segment title="Speaker"/>
                                     <segment title="Internal"/>
@@ -81,7 +80,9 @@
                         <constraints>
                             <constraint firstItem="sXM-qp-jQN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="17" id="6Dd-tb-mH7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jLt-cW-OoS" secondAttribute="trailing" id="Ml7-qX-4jL"/>
+                            <constraint firstItem="hew-ZE-CoJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="N8o-1R-cyg"/>
                             <constraint firstItem="pCl-Tt-8NU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dlN-UT-h6L"/>
+                            <constraint firstItem="hew-ZE-CoJ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="15" id="e2g-Qb-WPL"/>
                             <constraint firstAttribute="trailingMargin" secondItem="sXM-qp-jQN" secondAttribute="trailing" id="jA2-w3-dvf"/>
                             <constraint firstItem="pCl-Tt-8NU" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ozE-JA-WHW"/>
                             <constraint firstItem="jLt-cW-OoS" firstAttribute="top" secondItem="sXM-qp-jQN" secondAttribute="bottom" constant="8" id="v9z-G5-E5v"/>
@@ -97,6 +98,7 @@
                     <connections>
                         <outlet property="connectBtn" destination="jLt-cW-OoS" id="Yvx-LD-fBa"/>
                         <outlet property="connectionIndicator" destination="sXM-qp-jQN" id="UCG-0F-qCV"/>
+                        <outlet property="speakerSegmContr" destination="hew-ZE-CoJ" id="dux-Ah-cFE"/>
                         <outlet property="talkBtn" destination="pCl-Tt-8NU" id="saz-bP-5Ua"/>
                     </connections>
                 </viewController>

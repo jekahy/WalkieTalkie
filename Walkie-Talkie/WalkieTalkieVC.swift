@@ -16,6 +16,7 @@ class WalkieTalkieVC: UIViewController {
     @IBOutlet weak var connectionIndicator: UIView!
     @IBOutlet weak var talkBtn: UIButton!
     @IBOutlet weak var connectBtn: LoadingButton!
+    @IBOutlet weak var speakerSegmContr: UISegmentedControl!
     
     override func viewDidLoad()
     {
@@ -28,30 +29,44 @@ class WalkieTalkieVC: UIViewController {
 
     private func setupNotifications()
     {
-        NotificationCenter.default.addObserver(forName: UDP.didConnect, object: nil, queue: OperationQueue.main, using:connectionChanged)
-        NotificationCenter.default.addObserver(forName: UDP.didDisconnect, object: nil, queue: OperationQueue.main, using:connectionChanged)
-        NotificationCenter.default.addObserver(forName: UDP.failedToConnect, object: nil, queue: OperationQueue.main, using:connectionChanged)
+        NotificationCenter.default.addObserver(forName: UDP.didConnect, object: nil, queue: nil, using:connectionChanged)
+        NotificationCenter.default.addObserver(forName: UDP.didDisconnect, object: nil, queue: nil, using:connectionChanged)
+        NotificationCenter.default.addObserver(forName: UDP.failedToConnect, object: nil, queue:nil, using:connectionChanged)
     }
     
     
     private func connectionChanged(not:Notification)
     {
+        self.connectBtn.hideLoading()
+
         switch not.name {
             case UDP.didConnect:
-                self.toggleConnectionIndicator(enable: true)
-                self.connectBtn.hideLoading()
-                self.connectBtn.isEnabled=false
-                self.talkBtn.isEnabled = true
+                toggleConnectionIndicator(enable: true)
+                connectBtn.isEnabled=false
+                talkBtn.isEnabled = true
+                speakerSegmContr.isEnabled = true
             default:
                 // Failed to connect or did disconnect
-                self.toggleConnectionIndicator(enable: false)
-                self.connectBtn.hideLoading()
-                self.connectBtn.isEnabled=true
-                self.talkBtn.isEnabled = false
+                toggleConnectionIndicator(enable: false)
+                connectBtn.isEnabled=true
+                talkBtn.isEnabled = false
+                speakerSegmContr.isEnabled = false
         }
     }
     
-    // MARK: IBActions
+    private func toggleConnectionIndicator(enable:Bool)
+    {
+        
+        connectionIndicator.backgroundColor = enable ? .green : .gray
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension WalkieTalkieVC {
     
     @IBAction func connectTapped(_ sender: LoadingButton)
     {
@@ -64,7 +79,7 @@ class WalkieTalkieVC: UIViewController {
     {
         AudioManager.manager.toggleMicToState(state: .On)
     }
-   
+    
     
     @IBAction func stopTalking(_ sender: Any)
     {
@@ -74,22 +89,12 @@ class WalkieTalkieVC: UIViewController {
     
     @IBAction func speakerChanged(_ sender: UISegmentedControl)
     {
-        AudioManager.manager.toggleSpeaker(type: SpeakerType(rawValue:sender.selectedSegmentIndex)!)
-        
+        do {
+            try AudioManager.manager.toggleSpeaker(type: SpeakerType(rawValue:sender.selectedSegmentIndex)!)
+        }catch {
+            sender.selectedSegmentIndex = sender.selectedSegmentIndex == 0 ? 1 : 0
+            showAlert(titles: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
+        }
     }
-    
-    // MARK:
-    
-    private func toggleConnectionIndicator(enable:Bool){
-        
-        connectionIndicator.backgroundColor = enable ? .green : .gray
-        
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    
-}
 
+}

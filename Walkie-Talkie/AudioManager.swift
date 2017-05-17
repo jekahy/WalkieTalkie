@@ -23,18 +23,18 @@ final class AudioManager {
     
     static let manager: AudioManager = AudioManager()
     
-    private let audioEngine: AVAudioEngine = AVAudioEngine()
-    private let audioPlayer: AVAudioPlayerNode = AVAudioPlayerNode()
-    private let downMixer = AVAudioMixerNode()
-    private let outputSampleRate = 11025.0
-    private let outputIOBufferSize = 250.0
-    private let inputSampleRate = 11025.0
+    internal let audioEngine = AVAudioEngine()
+    internal let audioPlayer = AVAudioPlayerNode()
+    internal let downMixer = AVAudioMixerNode()
+    internal let outputSampleRate = 11025.0
+    internal let outputIOBufferSize = 250.0
+    internal let inputSampleRate = 11025.0
     
-    private var playerStarted = false
+    internal var playerStarted = false
     
-    private let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
+    internal let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
     
-    private let audioSession = AVAudioSession.sharedInstance()
+    internal let audioSession = AVAudioSession.sharedInstance()
     
     private init()
     {
@@ -59,7 +59,7 @@ final class AudioManager {
             //            try audioSession.setPreferredIOBufferDuration(outputIOBufferSize)
             try audioSession.setActive(true)
         } catch  let error as NSError {
-            print ("error\(error)")
+            print ("Audio session error: \(error)")
         }
     }
     
@@ -85,24 +85,15 @@ final class AudioManager {
         
         print ("\(String(describing: input?.outputFormat(forBus: 1)))")
         
-        
         downMixer.volume = 0.0
+        
         let mainMixer = audioEngine.mainMixerNode
-        
-        
         audioEngine.attach(downMixer)
-        
         audioEngine.connect(input!, to: downMixer, format: input?.inputFormat(forBus: 0))//use default input format
-        
         audioEngine.connect(downMixer, to: mainMixer, format: incommingFormat)
-        
-        //        mainMixer.volume = 0
-        //        mainMixer.outputVolume = 0
-        
+    
         
         print ("out format=\(downMixer.outputFormat(forBus: 0))")
-        //        downMixer.installTap(onBus: 0, bufferSize: 250, format: downMixer.outputFormat(forBus: 0), block: self.micInputBlock)
-        
         
         do{
             try audioEngine.start()
@@ -120,18 +111,7 @@ final class AudioManager {
         audioEngine.connect(audioPlayer, to:mainMixer, format: incommingFormat)
         playerStarted = true
     }
-    
-    
-    private func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer
-    {
-        
-        let PCMBuffer = AVAudioPCMBuffer(pcmFormat: incommingFormat, frameCapacity: UInt32(data.length) / incommingFormat.streamDescription.pointee.mBytesPerFrame)
-        PCMBuffer.frameLength = PCMBuffer.frameCapacity
-        
-        let channels = UnsafeBufferPointer(start: PCMBuffer.floatChannelData, count: Int(PCMBuffer.format.channelCount))
-        data.getBytes(UnsafeMutableRawPointer(channels[0]) , length: data.length)
-        return PCMBuffer
-    }
+
     
     
     func playData(data:Data){
@@ -147,7 +127,23 @@ final class AudioManager {
         }
     }
     
-    private func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData
+    
+    
+    internal func processMicData(buffer : AVAudioPCMBuffer, timeE: AVAudioTime)
+    {
+        
+        //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
+        
+        buffer.frameLength = 250
+        print ("time = \(timeE)")        
+        ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
+    }
+    
+}
+
+extension AudioManager {
+    
+    internal func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData
     {
         
         let channelCount = 1
@@ -155,46 +151,44 @@ final class AudioManager {
         
         let ch0Data = NSData(bytes: channels[0], length:Int(PCMBuffer.frameLength *
             PCMBuffer.format.streamDescription.pointee.mBytesPerFrame))
-        //        print(ch0Data)
-        
         return ch0Data
     }
     
-    private func micInputBlock(buffer : AVAudioPCMBuffer, timeE: AVAudioTime)
+    internal func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer
     {
         
-        //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
-        buffer.frameLength = 250
-        print ("time = \(timeE)")        
-        ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
+        let PCMBuffer = AVAudioPCMBuffer(pcmFormat: incommingFormat, frameCapacity: UInt32(data.length) / incommingFormat.streamDescription.pointee.mBytesPerFrame)
+        PCMBuffer.frameLength = PCMBuffer.frameCapacity
+        
+        let channels = UnsafeBufferPointer(start: PCMBuffer.floatChannelData, count: Int(PCMBuffer.format.channelCount))
+        data.getBytes(UnsafeMutableRawPointer(channels[0]) , length: data.length)
+        return PCMBuffer
     }
-    
+}
+
+
+extension AudioManager {
     
     func toggleMicToState(state:MicState)
     {
         switch state {
-            case .On:
-                downMixer.installTap(onBus: 0, bufferSize: 250, format: downMixer.outputFormat(forBus: 0), block: self.micInputBlock)
-            default:
-                downMixer.removeTap(onBus: 0)
+        case .On:
+            downMixer.installTap(onBus: 0, bufferSize: 250, format: downMixer.outputFormat(forBus: 0), block: processMicData)
+        default:
+            downMixer.removeTap(onBus: 0)
         }
     }
     
     
-    func toggleSpeaker(type:SpeakerType)
+    func toggleSpeaker(type:SpeakerType) throws
     {
-        do{
-            switch type {
-            case .LoudSpeaker:
-                try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
-                break
-            default:
-                try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.none)
-            }
-        }catch{
-            print ("Error occurred in speakerChanged: \(error)")
+        switch type {
+        case .LoudSpeaker:
+            try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
+            break
+        default:
+            try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.none)
         }
+       
     }
-
-    
 }

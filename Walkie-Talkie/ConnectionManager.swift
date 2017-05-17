@@ -25,26 +25,21 @@ enum UDP {
     static let failedToConnect = NSNotification.Name("UDP_FAILED_TO_CONNECT")
 }
 
-extension NSNotification.Name {
-    
-    
-    
-}
-
 
 final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     
     
     static let manager: ConnectionManager = ConnectionManager()
     
-    private var socket:GCDAsyncUdpSocket!
-    private var _socketInitialized = false
-    private var _remotePort:Int?
-    private var _incommingPort:Int?
-    private var _remoteAddress:String?
-    private var _receiveBlock:((Data)->())?
+    internal var socket:GCDAsyncUdpSocket!
+    internal var _socketInitialized = false
+    internal var _remotePort:Int?
+    internal var _incommingPort:Int?
+    internal var _remoteAddress:String?
+    internal var _receiveBlock:((Data)->())?
     
-    var socketInitialized:Bool {
+    var socketInitialized:Bool
+    {
         get{
             return _socketInitialized
         }
@@ -53,7 +48,8 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
         }
     }
     
-    var incommingPort:Int? {
+    var incommingPort:Int?
+    {
         get {
             if (_incommingPort == nil){
                 let storedPort = UserDefaults.standard.integer(forKey: INCOMMING_PORT_KEY)
@@ -68,7 +64,8 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
         }
     }
     
-    var remotePort:Int? {
+    var remotePort:Int?
+    {
         get {
             if (_remotePort == nil){
                 let storedPort = UserDefaults.standard.integer(forKey: REMOTE_PORT_KEY)
@@ -83,7 +80,8 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
         }
     }
     
-    var remoteAddress:String? {
+    var remoteAddress:String?
+    {
         get {
             if (_remoteAddress == nil){
                 _remoteAddress = UserDefaults.standard.string(forKey: REMOTE_ADDRESS_KEY)
@@ -99,13 +97,19 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     }
 // MARK: 
 //    ======================================================================================
-    private override init(){
+    private override init()
+    {
         super.init()
         socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
     }
     
+}
+
+
+extension ConnectionManager {
     
-    func connect(receiveBlock:@escaping (Data)->()) {
+    func connect(receiveBlock:@escaping (Data)->())
+    {
         
         _receiveBlock = receiveBlock
         if let rmPort = remotePort, let inPort = incommingPort, let addr = remoteAddress{
@@ -115,7 +119,7 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
                 try socket.connect(toHost: addr ,onPort : UInt16(rmPort))
                 try socket.beginReceiving()
             }catch{
-                print ("connect error = \(error.localizedDescription)")
+                print ("connection error = \(error.localizedDescription)")
             }
         }else{
             NotificationCenter.default.post(name: UDP.failedToConnect, object: UDPError.paramsMissing)
@@ -125,41 +129,48 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
         }
     }
     
-    func sendData(data:Data){
+    func sendData(data:Data)
+    {
         if socket.isConnected(){
             socket.send(data, withTimeout: 0, tag: 0)
         }
     }
-    
-    
-//======================================================================================
-    
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data) {
 
+}
+
+
+extension ConnectionManager {
+    
+    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data)
+    {
+        
         NotificationCenter.default.post(name: UDP.didConnect, object: nil)
         
     }
     
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotConnect error: Error?) {
+    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotConnect error: Error?)
+    {
         NotificationCenter.default.post(name: UDP.failedToConnect, object: error)
     }
     
-    internal func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?) {
+    internal func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?)
+    {
         NotificationCenter.default.post(name: UDP.didDisconnect, object: error)
         let alert = UIAlertController(title: "Error", message:"Socket was closed. Probably because the remote host stopped accepting connections.", preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .cancel, handler: nil))
         appDelegate.visibleVC(nil)?.present(alert, animated: true, completion: nil)
     }
     
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
+    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?)
+    {
         if let recBlock = _receiveBlock{
             recBlock(data)
         }
     }
     
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotSendDataWithTag tag: Int, dueToError error: Error?) {
+    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didNotSendDataWithTag tag: Int, dueToError error: Error?)
+    {
         NotificationCenter.default.post(name: UDP.didDisconnect, object: error)
     }
-    
     
 }

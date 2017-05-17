@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		954C087137CE6DFA99484432 /* Pods_Walkie_Talkie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FF41BA02A82234D36DC4910 /* Pods_Walkie_Talkie.framework */; };
+		E113B93F1ECB811D00FD1832 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113B93E1ECB811D00FD1832 /* Packet.swift */; };
 		E15542921E63528900FBA945 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15542911E63528900FBA945 /* ConnectionManager.swift */; };
 		E156BD5E1E648FC200733B32 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E156BD5D1E648FC200733B32 /* SettingsVC.swift */; };
 		E156BD601E64E67100733B32 /* RoundedCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */; };
@@ -18,13 +19,14 @@
 		E15CDC9A1E589821005A2361 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E15CDC981E589821005A2361 /* LaunchScreen.storyboard */; };
 		E15FE9301E6DCB04004FE7FF /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */; };
 		E1A8F9B91E6C1D8C00EC0329 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */; };
-		E1E56DF51E5A130C004A4FB8 /* AudioManager2.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E56DF41E5A130C004A4FB8 /* AudioManager2.swift */; };
+		E1EC4A4F1ECC5689005F6988 /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2D44C7F201769E2CA1EB20CA /* Pods-Walkie-Talkie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walkie-Talkie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Walkie-Talkie/Pods-Walkie-Talkie.debug.xcconfig"; sourceTree = "<group>"; };
 		5CF925897EA7FEDD8A6A08A0 /* Pods-Walkie-Talkie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walkie-Talkie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Walkie-Talkie/Pods-Walkie-Talkie.release.xcconfig"; sourceTree = "<group>"; };
 		5FF41BA02A82234D36DC4910 /* Pods_Walkie_Talkie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Walkie_Talkie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E113B93E1ECB811D00FD1832 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
 		E15542911E63528900FBA945 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		E156BD5D1E648FC200733B32 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCornerView.swift; sourceTree = "<group>"; };
@@ -37,7 +39,7 @@
 		E15CDC9B1E589821005A2361 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
-		E1E56DF41E5A130C004A4FB8 /* AudioManager2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager2.swift; sourceTree = "<group>"; };
+		E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				E15CDC8F1E589821005A2361 /* AppDelegate.swift */,
+				E113B93E1ECB811D00FD1832 /* Packet.swift */,
+				E1EC4A501ECC5691005F6988 /* Extensions */,
 				E15FB7DB1ECB646D00C43277 /* Controllers */,
 				E15FB7DD1ECB649200C43277 /* Managers */,
 				E15FB7DC1ECB648000C43277 /* Views */,
@@ -122,7 +126,6 @@
 		E15FB7DD1ECB649200C43277 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				E1E56DF41E5A130C004A4FB8 /* AudioManager2.swift */,
 				E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */,
 				E15542911E63528900FBA945 /* ConnectionManager.swift */,
 			);
@@ -144,6 +147,14 @@
 				E15CDC981E589821005A2361 /* LaunchScreen.storyboard */,
 			);
 			name = Interface;
+			sourceTree = "<group>";
+		};
+		E1EC4A501ECC5691005F6988 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -271,13 +282,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1A8F9B91E6C1D8C00EC0329 /* LoadingButton.swift in Sources */,
-				E1E56DF51E5A130C004A4FB8 /* AudioManager2.swift in Sources */,
 				E15FE9301E6DCB04004FE7FF /* AudioManager.swift in Sources */,
 				E15542921E63528900FBA945 /* ConnectionManager.swift in Sources */,
 				E15CDC921E589821005A2361 /* WalkieTalkieVC.swift in Sources */,
 				E15CDC901E589821005A2361 /* AppDelegate.swift in Sources */,
 				E156BD5E1E648FC200733B32 /* SettingsVC.swift in Sources */,
 				E156BD601E64E67100733B32 /* RoundedCornerView.swift in Sources */,
+				E1EC4A4F1ECC5689005F6988 /* ViewControllerExtensions.swift in Sources */,
+				E113B93F1ECB811D00FD1832 /* Packet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

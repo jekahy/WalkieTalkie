@@ -2,13 +2,16 @@ PODS:
   - CocoaAsyncSocket (7.5.1):
     - CocoaAsyncSocket/GCD (= 7.5.1)
   - CocoaAsyncSocket/GCD (7.5.1)
+  - ReachabilitySwift (3)
 
 DEPENDENCIES:
   - CocoaAsyncSocket
+  - ReachabilitySwift
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
+  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
 
-PODFILE CHECKSUM: 7f40ae47367071b22e02d5cb472b85a3602a9258
+PODFILE CHECKSUM: 838fd9947ae3ca29b2507fc576f7d7a4e7b924fa
 
 COCOAPODS: 1.1.1
