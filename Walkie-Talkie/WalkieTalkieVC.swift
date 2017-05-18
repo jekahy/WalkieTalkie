@@ -14,7 +14,7 @@ import ReachabilitySwift
 
 class WalkieTalkieVC: UIViewController {
     
-    internal let failedToObtainIPMess = "Failed to obtain =("
+    fileprivate let failedToObtainIPMess = "Failed to obtain =("
     
     @IBOutlet weak var connectionIndicator: UIView!
     @IBOutlet weak var talkBtn: UIButton!
@@ -70,7 +70,7 @@ class WalkieTalkieVC: UIViewController {
     }
     
     
-    internal func updateReachability()
+    @objc fileprivate func updateReachability()
     {
         
         guard let reachability = appDelegate.reachability else {

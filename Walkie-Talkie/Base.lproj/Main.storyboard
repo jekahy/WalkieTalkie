@@ -128,7 +128,7 @@
                                     <outlet property="errorLab" destination="Xpe-0S-MH1" id="wHE-Nu-UAl"/>
                                     <outlet property="ipAddressLab" destination="esT-Sn-Fk9" id="TAi-WX-9LG"/>
                                     <outletCollection property="addressLabs" destination="SNs-Cm-A8c" collectionClass="NSMutableArray" id="00L-9F-Txy"/>
-                                    <outletCollection property="addressLabs" destination="esT-Sn-Fk9" id="QRW-7S-dLF"/>
+                                    <outletCollection property="addressLabs" destination="esT-Sn-Fk9" collectionClass="NSMutableArray" id="QRW-7S-dLF"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -178,7 +178,7 @@
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="remote address" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="b2p-94-MOp">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="remote address" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="b2p-94-MOp" customClass="TextField" customModule="Walkie_Talkie" customModuleProvider="target">
                                 <rect key="frame" x="67.5" y="235.5" width="240" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="LFv-uE-V61"/>
@@ -187,8 +187,12 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                <connections>
+                                    <outlet property="delegate" destination="HRh-yc-9Qt" id="2vt-QD-ru7"/>
+                                    <outlet property="nextResp" destination="M1Y-hP-fYA" id="Hey-zW-3Jh"/>
+                                </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="remote port" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="M1Y-hP-fYA">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="remote port" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="M1Y-hP-fYA" customClass="TextField" customModule="Walkie_Talkie" customModuleProvider="target">
                                 <rect key="frame" x="67.5" y="286.5" width="240" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="dwV-5O-K7V"/>
@@ -197,8 +201,13 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <outlet property="delegate" destination="HRh-yc-9Qt" id="XVj-5s-K9U"/>
+                                    <outlet property="nextResp" destination="AjM-vX-tf0" id="pQ6-Dt-eI0"/>
+                                    <outlet property="prevResp" destination="b2p-94-MOp" id="2XU-vh-rZG"/>
+                                </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="incomming port" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="AjM-vX-tf0">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="incomming port" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="AjM-vX-tf0" customClass="TextField" customModule="Walkie_Talkie" customModuleProvider="target">
                                 <rect key="frame" x="67" y="335.5" width="240" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="BDT-Ai-VaX"/>
@@ -209,6 +218,10 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <outlet property="delegate" destination="HRh-yc-9Qt" id="IcP-1i-GLj"/>
+                                    <outlet property="prevResp" destination="M1Y-hP-fYA" id="4ye-tr-s4s"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pce-uf-m00">
                                 <rect key="frame" x="67" y="433" width="240" height="39"/>
@@ -217,8 +230,13 @@
                                 <state key="normal" title="Save">
                                     <color key="titleColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="sveParams:" destination="HRh-yc-9Qt" eventType="touchUpInside" id="e5J-J7-X8v"/>
+                                    <action selector="saveParams:" destination="HRh-yc-9Qt" eventType="touchUpInside" id="i4W-Fn-14J"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -237,9 +255,9 @@
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
-                        <outlet property="addressTF" destination="b2p-94-MOp" id="fu8-62-k48"/>
-                        <outlet property="inPortTF" destination="AjM-vX-tf0" id="pnu-Mj-kA9"/>
-                        <outlet property="remotePortTF" destination="M1Y-hP-fYA" id="Xx6-tE-A7d"/>
+                        <outlet property="addressTF" destination="b2p-94-MOp" id="OXc-B0-6rA"/>
+                        <outlet property="inPortTF" destination="AjM-vX-tf0" id="bCn-6r-WTm"/>
+                        <outlet property="remotePortTF" destination="M1Y-hP-fYA" id="eP1-wn-Cot"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I92-oc-36K" userLabel="First Responder" sceneMemberID="firstResponder"/>

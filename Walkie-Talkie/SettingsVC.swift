@@ -8,21 +8,34 @@
 
 import Foundation
 import UIKit
+import SwiftValidator
 
-class SettingsVC: UIViewController {
-    
-    @IBOutlet weak var addressTF: UITextField!
-    
-    @IBOutlet weak var remotePortTF: UITextField!
-    @IBOutlet weak var inPortTF: UITextField!
+class SettingsVC: UIViewController, UITextFieldDelegate {
     
     
-    override func viewDidLoad() {
+    fileprivate let validator = Validator()
+    @IBOutlet weak var addressTF: TextField!
+    @IBOutlet weak var remotePortTF: TextField!
+    @IBOutlet weak var inPortTF: TextField!
+    
+    fileprivate lazy var accessoryView:AccessoryView = {
+        let aView = AccessoryView(30)
+        aView.backgroundColor = UIColor.gray
+        return aView
+    }()
+    
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:))))
+        validator.registerField(addressTF, rules:[RequiredRule(message: "address is empty"),IPV4Rule(message: "address is invalid")])
+        validator.registerField(remotePortTF, rules: [RequiredRule(message: "remote port is missing"), CharacterSetRule(characterSet: .decimalDigits, message: "port may contain only numbers")])
+        validator.registerField(inPortTF, rules: [RequiredRule(message: "in port is missing"), CharacterSetRule(characterSet: .decimalDigits, message: "port may contain only numbers")])
+        addressTF.delegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool)
+    {
         super.viewWillAppear(animated)
         let manager = ConnectionManager.manager
         if let inPort = manager.incommingPort {
@@ -31,35 +44,56 @@ class SettingsVC: UIViewController {
         if let rmPort = manager.remotePort {
             remotePortTF.text = "\(rmPort)"
         }
-        addressTF.text = manager.remoteAddress
+        if let rmAddress = manager.remoteAddress {
+            addressTF.text = rmAddress
+        }else if let wifiAddress = ConnectionManager.getWiFiAddress() {
+            let commonAddressPart = wifiAddress.substring(to: wifiAddress.index(after: wifiAddress.indexes(of: ".").last!))
+            addressTF.text = commonAddressPart
+        }
     }
     
     
-    @IBAction func sveParams(_ sender: UIButton) {
-        let alertClosure = {
-            let alert = UIAlertController(title: "Error", message: "Not all required fields are filled. The connection will not be established.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel , handler: { action in
-                
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
+    @IBAction func saveParams(_ sender: UIButton)
+    {
         
-        if let inPort = inPortTF.text, let rmPort = remotePortTF.text,  let address = addressTF.text {
+        validator.validate { [unowned self] val_errs in
             
+            ConnectionManager.manager.remotePort = Int(self.remotePortTF.text!)
+            ConnectionManager.manager.incommingPort = Int(self.inPortTF.text!)
+            ConnectionManager.manager.remoteAddress = self.addressTF.text
             
-            if (inPort.characters.count == 0 || rmPort.characters.count == 0 || address.characters.count == 0){
-                alertClosure()
-            } else{
-                ConnectionManager.manager.remotePort = Int(rmPort)
-                ConnectionManager.manager.incommingPort = Int(inPort)
-                ConnectionManager.manager.remoteAddress = address
-                _ = self.navigationController?.popViewController(animated: true)
+            if val_errs.count > 0  {
+                let err_strs = val_errs.map{ $1.errorMessage}.joined(separator: ", ")
+                let finalMess = "Holly molly! Validation failed =( Probably, you won't be able to establish connection. Here are some clues for you: " + "\(err_strs)."
+                self.showAlert(title: "Oppps", mess: finalMess)
+                return
             }
+                
+            _ = self.navigationController?.popViewController(animated: true)
             
-        }else{
-            alertClosure()
         }
-
     }
     
+}
+
+
+extension SettingsVC{
+    
+ 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let nextTF = (textField as? TextField)?.nextResp{
+            nextTF.becomeFirstResponder()
+        } else{
+            textField.resignFirstResponder()
+        }
+        return false
+    }
+    
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
+    {
+        textField.inputAccessoryView = accessoryView
+        accessoryView.textField = textField as? TextField
+        return true
+    }
 }

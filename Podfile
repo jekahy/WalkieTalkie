@@ -5,5 +5,6 @@ target 'Walkie-Talkie' do
 
 pod 'CocoaAsyncSocket'
 pod 'ReachabilitySwift'
+pod 'SwiftValidator', :git => 'https://github.com/jpotts18/SwiftValidator.git', :branch => 'master'
 
 end

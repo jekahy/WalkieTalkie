@@ -43,11 +43,11 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     
     static let manager: ConnectionManager = ConnectionManager()
     
-    internal var socket:GCDAsyncUdpSocket!
-    internal var _remotePort:Int?
-    internal var _incommingPort:Int?
-    internal var _remoteAddress:String?
-    internal var _receiveBlock:((Data)->())?
+    fileprivate var socket:GCDAsyncUdpSocket!
+    fileprivate var _remotePort:Int?
+    fileprivate var _incommingPort:Int?
+    fileprivate var _remoteAddress:String?
+    fileprivate var _receiveBlock:((Data)->())?
     
     var incommingPort:Int?
     {
@@ -106,7 +106,7 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     }
     
     
-    internal func reachabilityChanged()
+    @objc fileprivate func reachabilityChanged()
     {
         NotificationCenter.default.post(name: UDP.didDisconnect, object: nil)
     }
@@ -152,7 +152,8 @@ extension ConnectionManager {
 
 extension ConnectionManager {
     
-    internal func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data)
+    internal func
+        udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data)
     {
         
         NotificationCenter.default.post(name: UDP.didConnect, object: nil)

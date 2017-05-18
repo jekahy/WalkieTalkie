@@ -24,18 +24,18 @@ final class AudioManager {
     
     static let manager: AudioManager = AudioManager()
     
-    internal let audioEngine = AVAudioEngine()
-    internal let audioPlayer = AVAudioPlayerNode()
-    internal let downMixer = AVAudioMixerNode()
-    internal let outputSampleRate = 11025.0
-    internal let outputIOBufferSize = 250.0
-    internal let inputSampleRate = 11025.0
+    fileprivate let audioEngine = AVAudioEngine()
+    fileprivate let audioPlayer = AVAudioPlayerNode()
+    fileprivate let downMixer = AVAudioMixerNode()
+    fileprivate let outputSampleRate = 11025.0
+    fileprivate let outputIOBufferSize = 250.0
+    fileprivate let inputSampleRate = 11025.0
     
-    internal var playerStarted = false
+    fileprivate var playerStarted = false
     
-    internal let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
+    fileprivate let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
     
-    internal let audioSession = AVAudioSession.sharedInstance()
+    fileprivate let audioSession = AVAudioSession.sharedInstance()
     
     private init()
     {
@@ -131,7 +131,7 @@ final class AudioManager {
     
     
     
-    internal func processMicData(buffer : AVAudioPCMBuffer, timeE: AVAudioTime)
+    fileprivate func processMicData(buffer : AVAudioPCMBuffer, timeE: AVAudioTime)
     {
         
         //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
@@ -142,7 +142,7 @@ final class AudioManager {
     }
     
     
-    @objc internal func reachabilityChanged()
+    @objc fileprivate func reachabilityChanged()
     {
         guard let reachability = appDelegate.reachability else {
             return
@@ -158,7 +158,7 @@ final class AudioManager {
 
 extension AudioManager {
     
-    internal func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData
+    fileprivate func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData
     {
         
         let channelCount = 1
@@ -169,7 +169,7 @@ extension AudioManager {
         return ch0Data
     }
     
-    internal func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer
+    fileprivate func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer
     {
         
         let PCMBuffer = AVAudioPCMBuffer(pcmFormat: incommingFormat, frameCapacity: UInt32(data.length) / incommingFormat.streamDescription.pointee.mBytesPerFrame)

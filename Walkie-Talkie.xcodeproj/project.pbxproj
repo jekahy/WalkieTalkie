@@ -11,7 +11,7 @@
 		E113B93F1ECB811D00FD1832 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113B93E1ECB811D00FD1832 /* Packet.swift */; };
 		E15542921E63528900FBA945 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15542911E63528900FBA945 /* ConnectionManager.swift */; };
 		E156BD5E1E648FC200733B32 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E156BD5D1E648FC200733B32 /* SettingsVC.swift */; };
-		E156BD601E64E67100733B32 /* RoundedCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */; };
+		E156BD601E64E67100733B32 /* RoundedCornerViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = E156BD5F1E64E67100733B32 /* RoundedCornerViews.swift */; };
 		E15CDC901E589821005A2361 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15CDC8F1E589821005A2361 /* AppDelegate.swift */; };
 		E15CDC921E589821005A2361 /* WalkieTalkieVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15CDC911E589821005A2361 /* WalkieTalkieVC.swift */; };
 		E15CDC951E589821005A2361 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E15CDC931E589821005A2361 /* Main.storyboard */; };
@@ -19,6 +19,10 @@
 		E15CDC9A1E589821005A2361 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E15CDC981E589821005A2361 /* LaunchScreen.storyboard */; };
 		E15FE9301E6DCB04004FE7FF /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */; };
 		E16FF7C61ECCB84000556D68 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16FF7C51ECCB84000556D68 /* AddressView.swift */; };
+		E173E15D1ECD9EF100E1CBFA /* StringExtansions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */; };
+		E173E1611ECDB1F300E1CBFA /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1601ECDB1F300E1CBFA /* TextField.swift */; };
+		E173E1631ECDC66700E1CBFA /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */; };
+		E173E1651ECDC73700E1CBFA /* AccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1641ECDC73700E1CBFA /* AccessoryView.swift */; };
 		E1A8F9B91E6C1D8C00EC0329 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */; };
 		E1EC4A4F1ECC5689005F6988 /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */; };
 		E1EC4A551ECC744F005F6988 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC4A541ECC744F005F6988 /* Platform.swift */; };
@@ -31,7 +35,7 @@
 		E113B93E1ECB811D00FD1832 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
 		E15542911E63528900FBA945 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		E156BD5D1E648FC200733B32 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
-		E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCornerView.swift; sourceTree = "<group>"; };
+		E156BD5F1E64E67100733B32 /* RoundedCornerViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCornerViews.swift; sourceTree = "<group>"; };
 		E15CDC8C1E589821005A2361 /* Walkie-Talkie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Walkie-Talkie.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E15CDC8F1E589821005A2361 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E15CDC911E589821005A2361 /* WalkieTalkieVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkieTalkieVC.swift; sourceTree = "<group>"; };
@@ -41,6 +45,10 @@
 		E15CDC9B1E589821005A2361 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E16FF7C51ECCB84000556D68 /* AddressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
+		E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtansions.swift; sourceTree = "<group>"; };
+		E173E1601ECDB1F300E1CBFA /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
+		E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		E173E1641ECDC73700E1CBFA /* AccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryView.swift; sourceTree = "<group>"; };
 		E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 		E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E1EC4A531ECC601E005F6988 /* Walkie-Talkie-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Walkie-Talkie-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -125,8 +133,9 @@
 		E15FB7DC1ECB648000C43277 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E156BD5F1E64E67100733B32 /* RoundedCornerView.swift */,
+				E156BD5F1E64E67100733B32 /* RoundedCornerViews.swift */,
 				E16FF7C51ECCB84000556D68 /* AddressView.swift */,
+				E173E1641ECDC73700E1CBFA /* AccessoryView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -144,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				E1A8F9B81E6C1D8C00EC0329 /* LoadingButton.swift */,
+				E173E1601ECDB1F300E1CBFA /* TextField.swift */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -161,6 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */,
+				E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */,
+				E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -290,14 +302,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1A8F9B91E6C1D8C00EC0329 /* LoadingButton.swift in Sources */,
+				E173E1651ECDC73700E1CBFA /* AccessoryView.swift in Sources */,
 				E15FE9301E6DCB04004FE7FF /* AudioManager.swift in Sources */,
 				E15542921E63528900FBA945 /* ConnectionManager.swift in Sources */,
 				E15CDC921E589821005A2361 /* WalkieTalkieVC.swift in Sources */,
 				E16FF7C61ECCB84000556D68 /* AddressView.swift in Sources */,
+				E173E1611ECDB1F300E1CBFA /* TextField.swift in Sources */,
 				E15CDC901E589821005A2361 /* AppDelegate.swift in Sources */,
 				E1EC4A551ECC744F005F6988 /* Platform.swift in Sources */,
+				E173E1631ECDC66700E1CBFA /* ViewExtensions.swift in Sources */,
 				E156BD5E1E648FC200733B32 /* SettingsVC.swift in Sources */,
-				E156BD601E64E67100733B32 /* RoundedCornerView.swift in Sources */,
+				E173E15D1ECD9EF100E1CBFA /* StringExtansions.swift in Sources */,
+				E156BD601E64E67100733B32 /* RoundedCornerViews.swift in Sources */,
 				E1EC4A4F1ECC5689005F6988 /* ViewControllerExtensions.swift in Sources */,
 				E113B93F1ECB811D00FD1832 /* Packet.swift in Sources */,
 			);

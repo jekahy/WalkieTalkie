@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 extension UIView{
+    
     @IBInspectable private var cornerRadius:CGFloat{
         set{
             self.layer.cornerRadius = CGFloat(newValue)
@@ -22,5 +23,5 @@ extension UIView{
         super.awakeFromNib()
         self.layer.masksToBounds = false
     }
-
 }
+
