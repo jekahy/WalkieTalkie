@@ -4,5 +4,6 @@ use_frameworks!
 target 'Walkie-Talkie' do
 
 pod 'CocoaAsyncSocket'
+pod 'ReachabilitySwift'
 
 end

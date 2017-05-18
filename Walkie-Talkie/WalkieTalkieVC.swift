@@ -9,31 +9,36 @@
 import UIKit
 import CocoaAsyncSocket
 import AVFoundation
+import ReachabilitySwift
 
 
 class WalkieTalkieVC: UIViewController {
+    
+    internal let failedToObtainIPMess = "Failed to obtain =("
     
     @IBOutlet weak var connectionIndicator: UIView!
     @IBOutlet weak var talkBtn: UIButton!
     @IBOutlet weak var connectBtn: LoadingButton!
     @IBOutlet weak var speakerSegmContr: UISegmentedControl!
+    @IBOutlet weak var addressView: AddressView!
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
-        _ = AudioManager.manager
-        
+
         setupNotifications()
+        updateReachability()
+
     }
+    
 
     private func setupNotifications()
     {
         NotificationCenter.default.addObserver(forName: UDP.didConnect, object: nil, queue: nil, using:connectionChanged)
         NotificationCenter.default.addObserver(forName: UDP.didDisconnect, object: nil, queue: nil, using:connectionChanged)
         NotificationCenter.default.addObserver(forName: UDP.failedToConnect, object: nil, queue:nil, using:connectionChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateReachability), name: ReachabilityChangedNotification, object: nil)
     }
-    
     
     private func connectionChanged(not:Notification)
     {
@@ -43,12 +48,16 @@ class WalkieTalkieVC: UIViewController {
             case UDP.didConnect:
                 toggleConnectionIndicator(enable: true)
                 connectBtn.isEnabled=false
+                talkBtn.backgroundColor = UIColor.green
                 talkBtn.isEnabled = true
                 speakerSegmContr.isEnabled = true
             default:
                 // Failed to connect or did disconnect
                 toggleConnectionIndicator(enable: false)
-                connectBtn.isEnabled=true
+                if let reachability = appDelegate.reachability, case .reachableViaWiFi = reachability.currentReachabilityStatus {
+                    connectBtn.isEnabled = true
+                }
+                talkBtn.backgroundColor = UIColor.red
                 talkBtn.isEnabled = false
                 speakerSegmContr.isEnabled = false
         }
@@ -59,6 +68,23 @@ class WalkieTalkieVC: UIViewController {
         
         connectionIndicator.backgroundColor = enable ? .green : .gray
     }
+    
+    
+    internal func updateReachability()
+    {
+        
+        guard let reachability = appDelegate.reachability else {
+            return
+        }
+        addressView.update(reachability: reachability.currentReachabilityStatus, address: ConnectionManager.getWiFiAddress())
+        if case .reachableViaWiFi = reachability.currentReachabilityStatus {
+            connectBtn.isEnabled = true
+        }else{
+            connectBtn.hideLoading()
+            connectBtn.isEnabled = false
+        }
+    }
+    
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -71,7 +97,12 @@ extension WalkieTalkieVC {
     @IBAction func connectTapped(_ sender: LoadingButton)
     {
         connectBtn.showLoading()
-        ConnectionManager.manager.connect(receiveBlock: AudioManager.manager.playData)
+        do {
+            try ConnectionManager.manager.connect(receiveBlock: AudioManager.manager.playData)
+        }catch{
+            let errMess = error.localizedDescription
+            showAlert(title: "Error", mess: errMess)
+        }
     }
     
     
@@ -93,7 +124,7 @@ extension WalkieTalkieVC {
             try AudioManager.manager.toggleSpeaker(type: SpeakerType(rawValue:sender.selectedSegmentIndex)!)
         }catch {
             sender.selectedSegmentIndex = sender.selectedSegmentIndex == 0 ? 1 : 0
-            showAlert(titles: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
+            showAlert(title: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
         }
     }
 

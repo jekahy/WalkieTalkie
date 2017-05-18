@@ -6,16 +6,28 @@
 //  Copyright © 2017 Eugenious. All rights reserved.
 //
 
+
 import Foundation
 import CocoaAsyncSocket
+import ReachabilitySwift
 
 private let INCOMMING_PORT_KEY = "INCOMMING_PORT_KEY"
 private let REMOTE_PORT_KEY = "REMOTE_PORT_KEY"
 private let REMOTE_ADDRESS_KEY = "REMOTE_ADDRESS_KEY"
 
+
 enum UDPError:Error {
     case paramsMissing
     case socketWasClosed
+    case noWifi
+    
+    var localizedDescription:String {
+        switch self {
+        case .noWifi: return "WiFi is not connected."
+        case .paramsMissing: return "Not all required parameters were set."
+        case .socketWasClosed: return "Socket was closed. Probably because no one was listening on the other end."
+        }
+    }
 }
 
 
@@ -32,21 +44,10 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     static let manager: ConnectionManager = ConnectionManager()
     
     internal var socket:GCDAsyncUdpSocket!
-    internal var _socketInitialized = false
     internal var _remotePort:Int?
     internal var _incommingPort:Int?
     internal var _remoteAddress:String?
     internal var _receiveBlock:((Data)->())?
-    
-    var socketInitialized:Bool
-    {
-        get{
-            return _socketInitialized
-        }
-        set{
-            _socketInitialized = newValue
-        }
-    }
     
     var incommingPort:Int?
     {
@@ -101,32 +102,42 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     {
         super.init()
         socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: ReachabilityChangedNotification, object: nil)
     }
     
+    
+    internal func reachabilityChanged()
+    {
+        NotificationCenter.default.post(name: UDP.didDisconnect, object: nil)
+    }
+    
+    deinit
+    {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 
 extension ConnectionManager {
     
-    func connect(receiveBlock:@escaping (Data)->())
+    func connect(receiveBlock:@escaping (Data)->()) throws
     {
-        
-        _receiveBlock = receiveBlock
-        if let rmPort = remotePort, let inPort = incommingPort, let addr = remoteAddress{
+        if let reachabilityStatus = appDelegate.reachability?.currentReachabilityStatus, case .reachableViaWiFi = reachabilityStatus{
             
-            do {
+            _receiveBlock = receiveBlock
+            if let rmPort = remotePort, let inPort = incommingPort, let addr = remoteAddress{
+            
                 try socket.bind(toPort: UInt16(inPort))
                 try socket.connect(toHost: addr ,onPort : UInt16(rmPort))
                 try socket.beginReceiving()
-            }catch{
-                print ("connection error = \(error.localizedDescription)")
+               
+            }else{
+                throw(UDPError.paramsMissing)
             }
         }else{
-            NotificationCenter.default.post(name: UDP.failedToConnect, object: UDPError.paramsMissing)
-            let alert = UIAlertController(title: "Error", message:"Some of the required parameters were not set.", preferredStyle: .alert)
-            alert.addAction(.init(title: "OK", style: .cancel, handler: nil))
-            appDelegate.visibleVC(nil)?.present(alert, animated: true, completion: nil)
+            throw(UDPError.noWifi)
         }
+        
     }
     
     func sendData(data:Data)
@@ -174,3 +185,44 @@ extension ConnectionManager {
     }
     
 }
+
+
+extension ConnectionManager {
+    
+    static func getWiFiAddress() -> String? {
+        var address : String?
+        let interfaceName = Platform.isSimulator ? "en1" : "en0"
+        // Get list of all interfaces on the local machine:
+        var ifaddr : UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else { return nil }
+        guard let firstAddr = ifaddr else { return nil }
+        
+        // For each interface ...
+        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+            let interface = ifptr.pointee
+            
+            // Check for IPv4 or IPv6 interface:
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+                
+                // Check interface name:
+                let name = String(cString: interface.ifa_name)
+                
+                if  name == interfaceName {
+                    
+                    // Convert interface address to a human readable string:
+                    var addr = interface.ifa_addr.pointee
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    getnameinfo(&addr, socklen_t(interface.ifa_addr.pointee.sa_len),
+                                &hostname, socklen_t(hostname.count),
+                                nil, socklen_t(0), NI_NUMERICHOST)
+                    address = String(cString: hostname)
+                }
+            }
+        }
+        freeifaddrs(ifaddr)
+        
+        return address
+    }
+}
+

@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import ReachabilitySwift
 
 enum MicState {
     case On
@@ -40,6 +41,7 @@ final class AudioManager {
     {
         setupAudioSession()
         initAudioEngine()
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: ReachabilityChangedNotification, object: nil)
     }
     
     private func setupAudioSession()
@@ -50,7 +52,7 @@ final class AudioManager {
             
             try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
             
-            try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
+            try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.none)
             
             try audioSession.setPreferredSampleRate(outputSampleRate)
             //            try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with:.defaultToSpeaker)
@@ -137,6 +139,19 @@ final class AudioManager {
         buffer.frameLength = 250
         print ("time = \(timeE)")        
         ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
+    }
+    
+    
+    @objc internal func reachabilityChanged()
+    {
+        guard let reachability = appDelegate.reachability else {
+            return
+        }
+        if case .reachableViaWiFi = reachability.currentReachabilityStatus {
+            try? audioEngine.start()
+        }else{
+            audioEngine.pause()
+        }
     }
     
 }

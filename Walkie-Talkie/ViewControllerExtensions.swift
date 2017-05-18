@@ -11,7 +11,7 @@ import UIKit
 
 extension UIViewController{
     
-    func showAlert(titles:String, mess:String)
+    func showAlert(title:String, mess:String)
     {
         let aVC = UIAlertController(title: title, message: mess, preferredStyle: .alert)
         aVC.addAction(UIAlertAction(title: "OK", style: .default))
