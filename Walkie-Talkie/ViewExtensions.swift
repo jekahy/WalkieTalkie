@@ -13,9 +13,7 @@ extension UIView {
     
     var width:CGFloat{
         set{
-            var frame = self.frame
-            frame.size = CGSize(width: newValue, height: self.frame.size.height)
-            self.frame = frame
+            self.frame.size.width = newValue
         }
         get{
             return self.frame.size.width
@@ -24,9 +22,7 @@ extension UIView {
     
     var height:CGFloat{
         set{
-            var frame = self.frame
-            frame.size = CGSize(width: self.frame.size.width, height: newValue)
-            self.frame = frame
+            self.frame.size.height = newValue
         }
         get{
             return self.frame.size.height
@@ -54,7 +50,7 @@ extension UIView {
     
     var x:CGFloat{
         set{
-            self.frame.origin = CGPoint(x: newValue, y: self.frame.origin.y)
+            self.frame.origin.x = newValue
         }
         get{
             return self.frame.origin.x
@@ -63,10 +59,11 @@ extension UIView {
     
     var y:CGFloat{
         set{
-            self.frame.origin = CGPoint(x:  self.frame.origin.x, y:newValue)
+            self.frame.origin.y = newValue
         }
         get{
             return self.frame.origin.y
         }
     }
 }
+
