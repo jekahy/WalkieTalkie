@@ -6,23 +6,21 @@
 //  Copyright © 2017 Eugenious. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
-import ReachabilitySwift
-
-enum MicState {
-    case On
-    case Off
-}
-
-enum SpeakerType:Int {
-    case LoudSpeaker = 0
-    case InternaSpeaker
-}
+import RxReachability
+import RxSwift
 
 final class AudioManager {
     
-    static let manager: AudioManager = AudioManager()
+    enum MicState {
+        case On
+        case Off
+    }
+    
+    enum SpeakerType:Int {
+        case LoudSpeaker = 0
+        case InternaSpeaker
+    }
     
     fileprivate let audioEngine = AVAudioEngine()
     fileprivate let audioPlayer = AVAudioPlayerNode()
@@ -37,11 +35,21 @@ final class AudioManager {
     
     fileprivate let audioSession = AVAudioSession.sharedInstance()
     
-    private init()
+    private let disposeBag = DisposeBag()
+
+    init()
     {
         setupAudioSession()
         initAudioEngine()
-        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: ReachabilityChangedNotification, object: nil)
+        
+        appDelegate.reachability?.rx.status.subscribe(onNext:{ [weak self] status in
+            
+            if case .reachableViaWiFi = status {
+                try? self?.audioEngine.start()
+            }else{
+                self?.audioEngine.pause()
+            }
+        }).disposed(by:disposeBag)
     }
     
     private func setupAudioSession()
@@ -139,19 +147,6 @@ final class AudioManager {
         buffer.frameLength = 250
         print ("time = \(timeE)")        
         ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
-    }
-    
-    
-    @objc fileprivate func reachabilityChanged()
-    {
-        guard let reachability = appDelegate.reachability else {
-            return
-        }
-        if case .reachableViaWiFi = reachability.currentReachabilityStatus {
-            try? audioEngine.start()
-        }else{
-            audioEngine.pause()
-        }
     }
     
 }

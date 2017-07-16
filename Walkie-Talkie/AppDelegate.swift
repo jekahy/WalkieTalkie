@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxReachability
 import ReachabilitySwift
 
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -20,13 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        _ = AudioManager.manager
 
         do{
             try reachability?.startNotifier()
         }
         catch {
-            print("could not start reachability notifier")
+            print("Failed to start Reachability")
         }
         
         return true

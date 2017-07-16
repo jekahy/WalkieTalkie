@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import CocoaAsyncSocket
-import AVFoundation
 import ReachabilitySwift
-
+import RxReachability
+import RxSwift
+import RxCocoa
 
 class WalkieTalkieVC: UIViewController {
     
@@ -22,12 +22,65 @@ class WalkieTalkieVC: UIViewController {
     @IBOutlet weak var speakerSegmContr: UISegmentedControl!
     @IBOutlet weak var addressView: AddressView!
     
+    fileprivate let audioManager = AudioManager()
+    
+    fileprivate let disposeBag = DisposeBag()
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
 
         setupNotifications()
-        updateReachability()
+        
+        if let reachabilityStatus = appDelegate.reachability?.currentReachabilityStatus {
+            
+            addressView.update(reachability: reachabilityStatus, address: ConnectionManager.getWiFiAddress())
+        }
+        
+        
+        appDelegate.reachability?.rx.status.subscribe(onNext: {[weak self] status in
+            self?.updateReachability(status)
+        }).disposed(by: disposeBag)
+        
+        connectBtn.rx.tap.subscribe(onNext:{ [unowned self] in
+            
+            self.connectBtn.showLoading()
+            do {
+                try ConnectionManager.manager.connect(receiveBlock: self.audioManager.playData)
+            }catch{
+                let errMess = error.localizedDescription
+                self.showAlert(title: "Error", mess: errMess)
+            }
+        }).disposed(by: disposeBag)
+        
+        talkBtn.rx.controlEvent(UIControlEvents.touchDown).subscribe(onNext: { [unowned self] in
+            
+            self.audioManager.toggleMicToState(state: .On)
+            
+        }).disposed(by: disposeBag)
+        
+        let stopTalkingEvents = [UIControlEvents.touchCancel, UIControlEvents.touchDragOutside, UIControlEvents.touchUpInside].map{talkBtn.rx.controlEvent($0)}.map{$0.asObservable()}
+        
+        Observable.merge(stopTalkingEvents).subscribe(onNext: { [unowned self] in
+            
+            self.audioManager.toggleMicToState(state: .Off)
+            
+        }).disposed(by: disposeBag)
+        
+        speakerSegmContr.rx.selectedSegmentIndex.subscribe(onNext: { [unowned self] selectedIdx in
+            
+            guard let speakerType = AudioManager.SpeakerType(rawValue:selectedIdx) else {
+                assertionFailure("Incorrect speaker type index")
+                return
+            }
+            do {
+                try self.audioManager.toggleSpeaker(type: speakerType)
+            }catch {
+                self.speakerSegmContr.selectedSegmentIndex = selectedIdx == 0 ? 1 : 0
+                self.showAlert(title: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
+            }
+            
+        }).disposed(by: disposeBag)
 
     }
     
@@ -37,7 +90,6 @@ class WalkieTalkieVC: UIViewController {
         NotificationCenter.default.addObserver(forName: UDP.didConnect, object: nil, queue: nil, using:connectionChanged)
         NotificationCenter.default.addObserver(forName: UDP.didDisconnect, object: nil, queue: nil, using:connectionChanged)
         NotificationCenter.default.addObserver(forName: UDP.failedToConnect, object: nil, queue:nil, using:connectionChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateReachability), name: ReachabilityChangedNotification, object: nil)
     }
     
     private func connectionChanged(not:Notification)
@@ -70,14 +122,11 @@ class WalkieTalkieVC: UIViewController {
     }
     
     
-    @objc fileprivate func updateReachability()
+    fileprivate func updateReachability(_ status:Reachability.NetworkStatus)
     {
-        
-        guard let reachability = appDelegate.reachability else {
-            return
-        }
-        addressView.update(reachability: reachability.currentReachabilityStatus, address: ConnectionManager.getWiFiAddress())
-        if case .reachableViaWiFi = reachability.currentReachabilityStatus {
+        addressView.update(reachability: status, address: ConnectionManager.getWiFiAddress())
+
+        if case .reachableViaWiFi = status {
             connectBtn.isEnabled = true
         }else{
             connectBtn.hideLoading()
@@ -85,47 +134,9 @@ class WalkieTalkieVC: UIViewController {
         }
     }
     
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
 }
 
-extension WalkieTalkieVC {
-    
-    @IBAction func connectTapped(_ sender: LoadingButton)
-    {
-        connectBtn.showLoading()
-        do {
-            try ConnectionManager.manager.connect(receiveBlock: AudioManager.manager.playData)
-        }catch{
-            let errMess = error.localizedDescription
-            showAlert(title: "Error", mess: errMess)
-        }
-    }
-    
-    
-    @IBAction func startTalking(_ sender: Any)
-    {
-        AudioManager.manager.toggleMicToState(state: .On)
-    }
-    
-    
-    @IBAction func stopTalking(_ sender: Any)
-    {
-        AudioManager.manager.toggleMicToState(state: .Off)
-    }
-    
-    
-    @IBAction func speakerChanged(_ sender: UISegmentedControl)
-    {
-        do {
-            try AudioManager.manager.toggleSpeaker(type: SpeakerType(rawValue:sender.selectedSegmentIndex)!)
-        }catch {
-            sender.selectedSegmentIndex = sender.selectedSegmentIndex == 0 ? 1 : 0
-            showAlert(title: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
-        }
-    }
-
-}

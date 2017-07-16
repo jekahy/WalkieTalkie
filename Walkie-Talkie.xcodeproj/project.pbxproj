@@ -19,7 +19,7 @@
 		E15CDC9A1E589821005A2361 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E15CDC981E589821005A2361 /* LaunchScreen.storyboard */; };
 		E15FE9301E6DCB04004FE7FF /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */; };
 		E16FF7C61ECCB84000556D68 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16FF7C51ECCB84000556D68 /* AddressView.swift */; };
-		E173E15D1ECD9EF100E1CBFA /* StringExtansions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */; };
+		E173E15D1ECD9EF100E1CBFA /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E15C1ECD9EF100E1CBFA /* StringExtensions.swift */; };
 		E173E1611ECDB1F300E1CBFA /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1601ECDB1F300E1CBFA /* TextField.swift */; };
 		E173E1631ECDC66700E1CBFA /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */; };
 		E173E1651ECDC73700E1CBFA /* AccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E173E1641ECDC73700E1CBFA /* AccessoryView.swift */; };
@@ -45,7 +45,7 @@
 		E15CDC9B1E589821005A2361 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E15FE92F1E6DCB04004FE7FF /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E16FF7C51ECCB84000556D68 /* AddressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
-		E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtansions.swift; sourceTree = "<group>"; };
+		E173E15C1ECD9EF100E1CBFA /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		E173E1601ECDB1F300E1CBFA /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		E173E1641ECDC73700E1CBFA /* AccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryView.swift; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				E1EC4A4E1ECC5689005F6988 /* ViewControllerExtensions.swift */,
-				E173E15C1ECD9EF100E1CBFA /* StringExtansions.swift */,
+				E173E15C1ECD9EF100E1CBFA /* StringExtensions.swift */,
 				E173E1621ECDC66700E1CBFA /* ViewExtensions.swift */,
 			);
 			name = Extensions;
@@ -261,7 +261,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		7C5BB624580FEFBD0754AF4D /* [CP] Copy Pods Resources */ = {
@@ -312,7 +312,7 @@
 				E1EC4A551ECC744F005F6988 /* Platform.swift in Sources */,
 				E173E1631ECDC66700E1CBFA /* ViewExtensions.swift in Sources */,
 				E156BD5E1E648FC200733B32 /* SettingsVC.swift in Sources */,
-				E173E15D1ECD9EF100E1CBFA /* StringExtansions.swift in Sources */,
+				E173E15D1ECD9EF100E1CBFA /* StringExtensions.swift in Sources */,
 				E156BD601E64E67100733B32 /* RoundedCornerViews.swift in Sources */,
 				E1EC4A4F1ECC5689005F6988 /* ViewControllerExtensions.swift in Sources */,
 				E113B93F1ECB811D00FD1832 /* Packet.swift in Sources */,

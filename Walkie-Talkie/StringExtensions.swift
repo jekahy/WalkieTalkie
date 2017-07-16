@@ -1,5 +1,5 @@
 //
-//  StringExtansions.swift
+//  StringExtensions.swift
 //  Walkie-Talkie
 //
 //  Created by Eugene on 18.05.17.

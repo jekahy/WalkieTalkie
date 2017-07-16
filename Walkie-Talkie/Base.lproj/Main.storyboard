@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="gxH-qS-gqZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="gxH-qS-gqZ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -41,9 +41,6 @@
                                     <constraint firstAttribute="width" constant="60" id="xLt-Bg-57f"/>
                                 </constraints>
                                 <state key="normal" title="Connect"/>
-                                <connections>
-                                    <action selector="connectTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kEL-fY-92j"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCl-Tt-8NU">
                                 <rect key="frame" x="127" y="273.5" width="120" height="120"/>
@@ -58,12 +55,6 @@
                                         <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="startTalking:" destination="BYZ-38-t0r" eventType="touchDown" id="dUY-r8-lr1"/>
-                                    <action selector="stopTalking:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Gfi-Fv-3br"/>
-                                    <action selector="stopTalking:" destination="BYZ-38-t0r" eventType="touchDragOutside" id="nJx-q9-FlM"/>
-                                    <action selector="stopTalking:" destination="BYZ-38-t0r" eventType="touchCancel" id="uqy-p5-tei"/>
-                                </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="hew-ZE-CoJ">
                                 <rect key="frame" x="15" y="79" width="129" height="29"/>
@@ -71,9 +62,6 @@
                                     <segment title="Speaker"/>
                                     <segment title="Internal"/>
                                 </segments>
-                                <connections>
-                                    <action selector="speakerChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Y6w-7J-PbL"/>
-                                </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drh-sw-egH" customClass="AddressView" customModule="Walkie_Talkie" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="617" width="375" height="50"/>
