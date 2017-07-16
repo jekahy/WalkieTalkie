@@ -15,14 +15,17 @@ import RxCocoa
 class WalkieTalkieVC: UIViewController {
     
     fileprivate let failedToObtainIPMess = "Failed to obtain =("
+    private let toSettingsSegue = "toSettings"
     
     @IBOutlet weak var connectionIndicator: UIView!
     @IBOutlet weak var talkBtn: UIButton!
     @IBOutlet weak var connectBtn: LoadingButton!
     @IBOutlet weak var speakerSegmContr: UISegmentedControl!
     @IBOutlet weak var addressView: AddressView!
+    @IBOutlet weak var settingsBtn: UIBarButtonItem!
     
-    fileprivate let audioManager = AudioManager()
+    fileprivate lazy var audioManager = AudioManager()
+    fileprivate let connectionManager = ConnectionManager()
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -46,7 +49,7 @@ class WalkieTalkieVC: UIViewController {
             
             self.connectBtn.showLoading()
             do {
-                try ConnectionManager.manager.connect(receiveBlock: self.audioManager.playData)
+                try self.connectionManager.connect(receiveBlock: self.audioManager.playData)
             }catch{
                 let errMess = error.localizedDescription
                 self.showAlert(title: "Error", mess: errMess)
@@ -82,6 +85,9 @@ class WalkieTalkieVC: UIViewController {
             
         }).disposed(by: disposeBag)
 
+        settingsBtn.rx.tap.subscribe(onNext:{ [unowned self] in
+            self.performSegue(withIdentifier: self.toSettingsSegue, sender: nil)
+        }).disposed(by: disposeBag)
     }
     
 
@@ -131,6 +137,12 @@ class WalkieTalkieVC: UIViewController {
         }else{
             connectBtn.hideLoading()
             connectBtn.isEnabled = false
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == toSettingsSegue, let settingsVC = segue.destination as? SettingsVC {
+            settingsVC.connectionManager = connectionManager
         }
     }
     

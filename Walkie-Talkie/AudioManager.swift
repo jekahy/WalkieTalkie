@@ -34,6 +34,8 @@ final class AudioManager {
     fileprivate let incommingFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 11025, channels: 1, interleaved: false)
     
     fileprivate let audioSession = AVAudioSession.sharedInstance()
+    fileprivate let audioDataOutputSubj = PublishSubject<Data>()
+    
     
     private let disposeBag = DisposeBag()
 
@@ -145,15 +147,17 @@ final class AudioManager {
         //        buffer.frameLength = AVAudioFrameCount(self.outputIOBufferSize)
         
         buffer.frameLength = 250
-        print ("time = \(timeE)")        
-        ConnectionManager.manager.sendData(data:self.toNSData(PCMBuffer: buffer) as Data)
+        print ("time = \(timeE)")
+        let data = self.toData(PCMBuffer: buffer)
+        audioDataOutputSubj.onNext(data)
+//        ConnectionManager.manager.sendData(data:)
     }
     
 }
 
 extension AudioManager {
     
-    fileprivate func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData
+    fileprivate func toData(PCMBuffer: AVAudioPCMBuffer) -> Data
     {
         
         let channelCount = 1
@@ -161,7 +165,7 @@ extension AudioManager {
         
         let ch0Data = NSData(bytes: channels[0], length:Int(PCMBuffer.frameLength *
             PCMBuffer.format.streamDescription.pointee.mBytesPerFrame))
-        return ch0Data
+        return ch0Data as Data
     }
     
     fileprivate func toPCMBuffer(data: NSData) -> AVAudioPCMBuffer

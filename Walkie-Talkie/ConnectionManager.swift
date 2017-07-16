@@ -40,9 +40,6 @@ enum UDP {
 
 final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     
-    
-    static let manager: ConnectionManager = ConnectionManager()
-    
     fileprivate var socket:GCDAsyncUdpSocket!
     fileprivate var _remotePort:Int?
     fileprivate var _incommingPort:Int?
@@ -98,12 +95,14 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     }
 // MARK: 
 //    ======================================================================================
-    private override init()
+    override init()
     {
         super.init()
         socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: ReachabilityChangedNotification, object: nil)
     }
+    
+    
     
     
     @objc fileprivate func reachabilityChanged()

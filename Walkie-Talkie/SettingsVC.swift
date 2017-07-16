@@ -14,9 +14,12 @@ class SettingsVC: UIViewController, UITextFieldDelegate {
     
     
     fileprivate let validator = Validator()
+    
     @IBOutlet weak var addressTF: TextField!
     @IBOutlet weak var remotePortTF: TextField!
     @IBOutlet weak var inPortTF: TextField!
+    
+    var connectionManager:ConnectionManager!
     
     fileprivate lazy var accessoryView:AccessoryView = {
         let aView = AccessoryView(30)
@@ -37,14 +40,13 @@ class SettingsVC: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        let manager = ConnectionManager.manager
-        if let inPort = manager.incommingPort {
+        if let inPort = connectionManager.incommingPort {
             inPortTF.text = "\(inPort)"
         }
-        if let rmPort = manager.remotePort {
+        if let rmPort = connectionManager.remotePort {
             remotePortTF.text = "\(rmPort)"
         }
-        if let rmAddress = manager.remoteAddress {
+        if let rmAddress = connectionManager.remoteAddress {
             addressTF.text = rmAddress
         }else if let wifiAddress = ConnectionManager.getWiFiAddress() {
             let commonAddressPart = wifiAddress.substring(to: wifiAddress.index(after: wifiAddress.indexes(of: ".").last!))
@@ -58,9 +60,9 @@ class SettingsVC: UIViewController, UITextFieldDelegate {
         
         validator.validate { [unowned self] val_errs in
             
-            ConnectionManager.manager.remotePort = Int(self.remotePortTF.text!)
-            ConnectionManager.manager.incommingPort = Int(self.inPortTF.text!)
-            ConnectionManager.manager.remoteAddress = self.addressTF.text
+            self.connectionManager.remotePort = Int(self.remotePortTF.text!)
+            self.connectionManager.incommingPort = Int(self.inPortTF.text!)
+            self.connectionManager.remoteAddress = self.addressTF.text
             
             if val_errs.count > 0  {
                 let err_strs = val_errs.map{ $1.errorMessage}.joined(separator: ", ")

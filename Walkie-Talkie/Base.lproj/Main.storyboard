@@ -136,23 +136,21 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="OnT-MC-EtE">
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="0Ev-ou-mIh">
-                            <connections>
-                                <segue destination="HRh-yc-9Qt" kind="show" id="fPR-Pa-bHK"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Settings" id="0Ev-ou-mIh"/>
                     </navigationItem>
                     <connections>
                         <outlet property="addressView" destination="drh-sw-egH" id="lLt-gf-iME"/>
                         <outlet property="connectBtn" destination="jLt-cW-OoS" id="Yvx-LD-fBa"/>
                         <outlet property="connectionIndicator" destination="sXM-qp-jQN" id="UCG-0F-qCV"/>
+                        <outlet property="settingsBtn" destination="0Ev-ou-mIh" id="jwb-gZ-jBo"/>
                         <outlet property="speakerSegmContr" destination="hew-ZE-CoJ" id="dux-Ah-cFE"/>
                         <outlet property="talkBtn" destination="pCl-Tt-8NU" id="saz-bP-5Ua"/>
+                        <segue destination="HRh-yc-9Qt" kind="show" identifier="toSettings" id="4Ww-lv-QMH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1156" y="-6.746626686656672"/>
+            <point key="canvasLocation" x="1086" y="-7"/>
         </scene>
         <!--SettingsVC-->
         <scene sceneID="EYt-27-nDQ">

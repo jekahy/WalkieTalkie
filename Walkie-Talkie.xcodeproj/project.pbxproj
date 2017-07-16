@@ -124,8 +124,8 @@
 		E15FB7DB1ECB646D00C43277 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				E156BD5D1E648FC200733B32 /* SettingsVC.swift */,
 				E15CDC911E589821005A2361 /* WalkieTalkieVC.swift */,
+				E156BD5D1E648FC200733B32 /* SettingsVC.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
