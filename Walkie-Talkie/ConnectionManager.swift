@@ -10,6 +10,7 @@
 import Foundation
 import CocoaAsyncSocket
 import ReachabilitySwift
+import RxSwift
 
 private let INCOMMING_PORT_KEY = "INCOMMING_PORT_KEY"
 private let REMOTE_PORT_KEY = "REMOTE_PORT_KEY"
@@ -45,6 +46,8 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
     fileprivate var _incommingPort:Int?
     fileprivate var _remoteAddress:String?
     fileprivate var _receiveBlock:((Data)->())?
+    
+    private let disposeBag = DisposeBag()
     
     var incommingPort:Int?
     {
@@ -102,6 +105,17 @@ final class ConnectionManager: NSObject, GCDAsyncUdpSocketDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: ReachabilityChangedNotification, object: nil)
     }
     
+    convenience init(dataObservable:Observable<Data>)
+    {
+        self.init()
+        
+        dataObservable.subscribe(onNext: { [weak self] data in
+            
+            self?.sendData(data: data)
+            
+        }).disposed(by: disposeBag)
+        
+    }
     
     
     

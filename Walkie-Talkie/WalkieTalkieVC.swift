@@ -24,8 +24,8 @@ class WalkieTalkieVC: UIViewController {
     @IBOutlet weak var addressView: AddressView!
     @IBOutlet weak var settingsBtn: UIBarButtonItem!
     
-    fileprivate lazy var audioManager = AudioManager()
-    fileprivate let connectionManager = ConnectionManager()
+    private (set) var audioManager:AudioManager!
+    private (set) var connectionManager:ConnectionManager!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -33,6 +33,27 @@ class WalkieTalkieVC: UIViewController {
     {
         super.viewDidLoad()
 
+        let stopTalkingEvents = [UIControlEvents.touchCancel, UIControlEvents.touchDragOutside, UIControlEvents.touchUpInside].map{talkBtn.rx.controlEvent($0)}.map{ $0.map{AudioManager.MicState.Off}}
+        let startTalkingEvent =  talkBtn.rx.controlEvent(UIControlEvents.touchDown).map{AudioManager.MicState.On}
+        
+        let talkToggle = Observable<AudioManager.MicState>.merge(stopTalkingEvents + [startTalkingEvent]).debug()
+
+        let speakerToggle = speakerSegmContr.rx.selectedSegmentIndex.asObservable().flatMap { selectedIdx -> Observable<AudioManager.SpeakerType> in
+            guard let speakerType = AudioManager.SpeakerType(rawValue:selectedIdx) else {
+                return Observable.never()
+            }
+            return Observable.just(speakerType)
+        }
+        
+        do {
+            audioManager = try AudioManager(talkToggle, speakerToggle:speakerToggle)
+            connectionManager = ConnectionManager(dataObservable: audioManager.audioDataOutput)
+        }catch{
+            let mes = "Failed to initiate audion manager: \(error)"
+            assertionFailure(mes)
+            showAlert(title: "Error", mess: mes)
+        }
+        
         setupNotifications()
         
         if let reachabilityStatus = appDelegate.reachability?.currentReachabilityStatus {
@@ -56,35 +77,6 @@ class WalkieTalkieVC: UIViewController {
             }
         }).disposed(by: disposeBag)
         
-        talkBtn.rx.controlEvent(UIControlEvents.touchDown).subscribe(onNext: { [unowned self] in
-            
-            self.audioManager.toggleMicToState(state: .On)
-            
-        }).disposed(by: disposeBag)
-        
-        let stopTalkingEvents = [UIControlEvents.touchCancel, UIControlEvents.touchDragOutside, UIControlEvents.touchUpInside].map{talkBtn.rx.controlEvent($0)}.map{$0.asObservable()}
-        
-        Observable.merge(stopTalkingEvents).subscribe(onNext: { [unowned self] in
-            
-            self.audioManager.toggleMicToState(state: .Off)
-            
-        }).disposed(by: disposeBag)
-        
-        speakerSegmContr.rx.selectedSegmentIndex.subscribe(onNext: { [unowned self] selectedIdx in
-            
-            guard let speakerType = AudioManager.SpeakerType(rawValue:selectedIdx) else {
-                assertionFailure("Incorrect speaker type index")
-                return
-            }
-            do {
-                try self.audioManager.toggleSpeaker(type: speakerType)
-            }catch {
-                self.speakerSegmContr.selectedSegmentIndex = selectedIdx == 0 ? 1 : 0
-                self.showAlert(title: "Error", mess: "An error occured while trying to switch the speaker: \(error.localizedDescription)")
-            }
-            
-        }).disposed(by: disposeBag)
-
         settingsBtn.rx.tap.subscribe(onNext:{ [unowned self] in
             self.performSegue(withIdentifier: self.toSettingsSegue, sender: nil)
         }).disposed(by: disposeBag)
